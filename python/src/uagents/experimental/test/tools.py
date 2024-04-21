@@ -27,6 +27,12 @@ class TestAgentProtocol(unittest.IsolatedAsyncioTestCase):
         for sample_request in self.sample_requests:
             schema_digest = Model.build_schema_digest(sample_request)
             handler = self.agentproto._signed_message_handlers.get(schema_digest)
+            if handler is None:
+                handler = self.agentproto._unsigned_message_handlers.get(schema_digest)
+            if handler is None:
+                self.fail(
+                    f"No message handler found for incoming message type {type(sample_request)}"
+                )
             with (
                 self.subTest(sample_request=sample_request),
                 patch.object(Context, "send") as mock_send,
