@@ -13,6 +13,7 @@ class TestAgentProtocol(unittest.IsolatedAsyncioTestCase):
 
     def setUp(self) -> None:
         if isinstance(self.agentproto, Agent):
+            self.agentproto.include(self.agentproto._protocol)
             self.context = self.agentproto._ctx
         super().setUp()
 
